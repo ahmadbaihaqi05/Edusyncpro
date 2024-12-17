@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://localhost/gantiguru"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://localhost/gantiguru">
+             
+    <types>
+        <xsd:schema targetNamespace="http://localhost/gantiguru">
+            <xsd:element name="GantiGuruRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="namaGuruLama" type="xsd:string"/>
+                        <xsd:element name="namaGuruBaru" type="xsd:string"/>
+                        <xsd:element name="hari" type="xsd:string"/>
+                        <xsd:element name="jamPelajaran" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GantiGuruResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="status" type="xsd:string"/>
+                        <xsd:element name="message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="GantiGuruInput">
+        <part name="parameters" element="tns:GantiGuruRequest"/>
+    </message>
+    <message name="GantiGuruOutput">
+        <part name="parameters" element="tns:GantiGuruResponse"/>
+    </message>
+
+    <portType name="GuruPortType">
+        <operation name="GantiGuru">
+            <input message="tns:GantiGuruInput"/>
+            <output message="tns:GantiGuruOutput"/>
+        </operation>
+    </portType>
+
+    <binding name="GuruBinding" type="tns:GuruPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GantiGuru">
+            <soap:operation soapAction="http://localhost/gantiguru#GantiGuru"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="GuruService">
+        <port name="GuruPort" binding="tns:GuruBinding">
+            <soap:address location="http://localhost/gantiguru/server.php"/>
+        </port>
+    </service>
+</definitions>
