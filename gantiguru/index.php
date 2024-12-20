@@ -350,8 +350,8 @@ authorize('admin'); // Fungsi untuk membatasi akses hanya untuk admin
                 </button>
                 <div class="dropdown-menu">
                     <ul>
-                        <li><a href="profile.php"><i class="fas fa-user"></i> Profil</a></li>
-                        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        <li><a href="../profile.php"><i class="fas fa-user"></i> Profil</a></li>
+                        <li><a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -398,7 +398,7 @@ authorize('admin'); // Fungsi untuk membatasi akses hanya untuk admin
 
                 <div class="button-container">
                 <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <!-- Tombol untuk admin -->
+                    <!-- jika klik kembali kedashboard tidak perlu login ulang -->
                     <button class="dashboard-btn" onclick="window.location.href='../dashboard.php';">
                         <span class="icon"><i class="fas fa-home"></i></span>
                         <span class="text">Kembali ke Dashboard</span>
