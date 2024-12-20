@@ -1,5 +1,8 @@
 <?php
 include '../auth.php';
+
+// Cek apakah user yang login adalah admin
+$isAdmin = ($_SESSION['role'] ?? '') === 'admin';
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +26,7 @@ include '../auth.php';
             background-color: #f4f7fc;
         }
 
-        /* Sidebar */
+        /* Sidebar Styles */
         .sidebar {
             width: 250px;
             background-color: #2c3e50;
@@ -88,7 +91,7 @@ include '../auth.php';
         font-family: 'Arial', sans-serif;
         }
 
-        /* welcome text */
+        /* Bagian kiri navbar (welcome text) */
         .navbar-left .welcome {
         font-size: 18px;
         font-weight: bold;
@@ -102,9 +105,9 @@ include '../auth.php';
         font-size: 22px;
         }
 
-        /* user info */
+        /* Bagian kanan navbar (user info) */
         .navbar-right {
-            position: relative; 
+            position: relative; /* Untuk dropdown positioning */
         }
 
         .dropdown-btn {
@@ -319,6 +322,22 @@ include '../auth.php';
             transform: translateY(0px);
             box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
         }
+        /* Logout Button */
+      .logout-btn {
+          background-color: #e74c3c;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+
+      .logout-btn:hover {
+          background-color: #c0392b;
+      }
+
 
     </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -326,82 +345,90 @@ include '../auth.php';
   <script src="client.js"></script>
 </head>
 <body>
-    <!-- Side bar -->
-     <div class="sidebar">
-        <div class="sidebar-header">
-      <h2>EduSyncPro</h2>
+<?php if ($isAdmin): ?>
+  <div class="sidebar">
+      <div class="sidebar-header">
+          <h2>EduSyncPro</h2>
+      </div>
+      <ul class="menu">
+          <li><a href="index.php"><i class="fas fa-user-check"></i> Cek Ketersediaan Guru</a></li>
+          <li><a href="../gantiguru/index.php"><i class="fas fa-exchange-alt"></i> Ganti Guru</a></li>
+          <li><a href="../alokasi/index.php"><i class="fas fa-calendar-alt"></i> Alokasi Jadwal Guru</a></li>
+      </ul>
+  </div>
+  <?php endif; ?>
+
+  <div class="main-content">
+  <?php if ($isAdmin): ?> 
+  <div class="navbar">
+        <div class="navbar-left">
+            <span class="welcome"><i class="fas fa-graduation-cap"></i> Halo Admin ! Halaman ini dirancang untuk mempermudah Anda melihat Ketersediaan guru.</span>
+        </div>
+        <div class="navbar-right">
+            <button class="dropdown-btn">
+                <span>Admin</span>
+                <i class="fas fa-user-circle"></i>
+            </button>
+            <div class="dropdown-menu">
+                <ul>
+                    <li><a href="../profile.php"><i class="fas fa-user"></i> Profil</a></li>
+                    <li><a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <ul class="menu">
-      <li><a href="index.php"><i class="fas fa-user-check"></i> Cek Ketersediaan Guru</a></li>
-      <li><a href="../gantiguru/index.php"><i class="fas fa-exchange-alt"></i> Ganti Guru</a></li>
-      <li><a href="../alokasi/index.php"><i class="fas fa-calendar-alt"></i> Alokasi Jadwal Guru</a></li>
-    </ul>
-    </div>`
+    <?php endif; ?>
 
-    <div class="main-content">
-        <div class="navbar">
-            <div class="navbar-left">
-                <span class="welcome"><i class="fas fa-graduation-cap"></i> Halo Admin ! Halaman ini dirancang untuk mempermudah Anda melihat Ketersediaan guru.</span>
-            </div>
-            <div class="navbar-right">
-                <button class="dropdown-btn">
-                    <span>Admin</span>
-                    <i class="fas fa-user-circle"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <ul>
-                        <li><a href="profile.php"><i class="fas fa-user"></i> Profil</a></li>
-                        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <div style="margin-top: 10px;" class="dashboard-content">
+      <div class="form-container">
+        <h1><i class="fas fa-user-check"></i> Cek Ketersediaan Guru</h1>
+        <form id="checkForm">
+          <div class="form-group">
+            <label for="nama_guru">Nama Guru:</label>
+            <input type="text" id="nama_guru" name="nama_guru" placeholder="Masukkan nama guru" required>
+          </div>
 
-        <div style="margin-top: 10px;" class="dashboard-content">
-            <!-- form cek guru -->
-            <div class="form-container">
-                <h1><i class="fas fa-user-check"></i> Cek Ketersediaan Guru</h1>
-                <form id="checkForm">
-                    <div class="form-group">
-                        <label for="nama_guru">Nama Guru:</label>
-                        <input type="text" id="nama_guru" name="nama_guru" placeholder="Masukkan nama guru" required>
-                    </div>
+          <div class="form-group">
+            <label for="hari">Hari:</label>
+            <select id="hari" name="hari" required>
+              <option value="" disabled selected>Pilih hari</option>
+              <option value="Senin">Senin</option>
+              <option value="Selasa">Selasa</option>
+              <option value="Rabu">Rabu</option>
+              <option value="Kamis">Kamis</option>
+              <option value="Jumat">Jumat</option>
+            </select>
+          </div>
 
-                    <div class="form-group">
-                        <label for="hari">Hari:</label>
-                        <select id="hari" name="hari" required>
-                        <option value="" disabled selected>Pilih hari</option>
-                        <option value="Senin">Senin</option>
-                        <option value="Selasa">Selasa</option>
-                        <option value="Rabu">Rabu</option>
-                        <option value="Kamis">Kamis</option>
-                        <option value="Jumat">Jumat</option>
-                        </select>
-                    </div>
+          <div class="form-group">
+            <label for="jam_pelajaran">Jam Pelajaran:</label>
+            <input type="number" id="jam_pelajaran" name="jam_pelajaran" placeholder="Masukkan jam pelajaran" min="1" max="8" required>
+          </div>
 
-                    <div class="form-group">
-                        <label for="jam_pelajaran">Jam Pelajaran:</label>
-                        <input type="number" id="jam_pelajaran" name="jam_pelajaran" placeholder="Masukkan jam pelajaran" min="1" max="8" required>
-                    </div>
+          <div class="button-submit"> <button type="submit" class="submit-btn">Cek Ketersediaan</button> </div>
 
-                    <div class="button-submit"> <button type="submit" class="submit-btn">Cek Ketersediaan</button> </div>
-
-                    <div id="result" class="result">
-                        <p id="output"></p>
-                    </div>
-                </form>
-                
-                <div class="button-container">
-                    <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <!-- jika klik kembali kedashboard tidak perlu login ulang -->
-                    <button class="dashboard-btn" onclick="window.location.href='../dashboard.php';">
-                    <span class="icon"><i class="fas fa-home"></i></span>
-                    <span class="text">Kembali ke Dashboard</span>
-                    </button>
-                <?php endif; ?>
-                </div>
-            </div>
-        </div>
+          <div id="result" class="result">
+            <p id="output"></p>
+          </div>
+        </form>
+            
+        <div class="button-container">
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+            <!-- Tombol untuk admin -->
+            <button class="dashboard-btn" onclick="window.location.href='../dashboard.php';">
+                <span class="icon"><i class="fas fa-home"></i></span>
+                <span class="text">Kembali ke Dashboard</span>
+            </button>
+        <?php else: ?>
+            <!-- Tombol untuk siswa -->
+            <button class="logout-btn" onclick="window.location.href='../logout.php';">
+                <span class="icon"><i class="fas fa-sign-out-alt" style="color:white"></i></span>
+                <span class="text">Logout</span>
+            </button>
+        <?php endif; ?>
+    </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -422,8 +449,6 @@ include '../auth.php';
                 }
             });
         });
-
-        // menyembunyikan bagian output sebelum user klik button submit
         document.getElementById("checkForm").addEventListener("submit", function (e) {
           e.preventDefault();
           const result = document.getElementById("result");
@@ -431,6 +456,7 @@ include '../auth.php';
 
           result.classList.add("active"); 
         });
+
     </script>
 </body>
 </html>
